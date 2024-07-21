@@ -1,4 +1,4 @@
-\c colors_prod;
+\c colors_crud;
 
 INSERT INTO colors (name, is_favorite) VALUES
 ('Orchid', true),
