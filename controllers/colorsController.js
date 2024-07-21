@@ -1,8 +1,8 @@
 // controllers/colorsController.js
 const express = require("express");
 const colors = express.Router();
-const { getAllColors ,getColor,createColor} = require("../queries/color");
-
+const { getAllColors ,getColor,createColor,deleteColor,updateColor} = require("../queries/color");
+const { checkName,checkBoolean } = require("../validations/checkColors.js");
 
 // INDEX
 colors.get("/", async (req, res) => {
@@ -24,9 +24,23 @@ colors.get("/:id", async (req, res) => {
   }
 });
 // CREATE
-colors.post("/", async (req, res) => {
+colors.post("/",checkName,checkBoolean, async (req, res) => {
+
   const color = await createColor(req.body);
   res.json(color);
 });
-
+colors.delete("/:id", async (req, res) => {
+  const { id } = req.params;
+  const deletedColor = await deleteColor(id);
+  if (deletedColor.id) {
+    res.status(200).json(deletedColor);
+  } else {
+    res.status(404).json("Color not found");
+  }
+});
+colors.put("/:id", async (req, res) => {
+  const { id } = req.params;
+  const updatedColor = await updateColor(id, req.body);
+  res.status(200).json(updatedColor);
+});
 module.exports = colors;
